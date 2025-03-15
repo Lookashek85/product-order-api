@@ -36,7 +36,13 @@ hence I need to focus more on working code rather than syntactic sugars, etc.
 
 I setup required dependencies and added first class to project... 
 
+### Stage 2 - Create domain 
 
+I will create required entities and service definitions that will form my domain. 
+Later I will implement domain services and write unit tests to verify my design.
+At this stage I should be able to build the app but it won't start yet...
+
+### Stage 3 - Implement domain services 
 
 
 
