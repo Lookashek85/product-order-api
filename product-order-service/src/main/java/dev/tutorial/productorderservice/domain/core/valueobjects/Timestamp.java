@@ -11,10 +11,6 @@ public record Timestamp(Instant value) {
     }
   }
 
-  public static Timestamp now() {
-    return new Timestamp(Instant.now());
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

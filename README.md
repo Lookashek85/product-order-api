@@ -43,7 +43,9 @@ Later I will implement domain services and write unit tests to verify my design.
 At this stage I should be able to build the app but it won't start yet...
 
 ### Stage 3 - Implement domain services 
-
+Development went ok, I made few minor changes to my model, I tested domain code and found out there is an
+issue with resolving order dates, I will look into it tomorrow. I'm done for today, Java switch was a bit harder 
+than I thought, I reminded to myself why I loved Kotlin so much when first introduced to it ;)
 
 
 

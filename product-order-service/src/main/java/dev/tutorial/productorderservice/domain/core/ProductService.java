@@ -9,7 +9,9 @@ public interface ProductService {
 
   List<Product> getProducts();
 
+  Boolean exists(ProductId productId);
+
   Optional<Product> getProductById(ProductId productId);
 
-  Product updateProduct(ProductId productId, Product product);
+  Product updateProduct(Product product);
 }

@@ -6,4 +6,8 @@ public class UserId extends BaseId<UserId> {
   protected UserId(UUID value) {
     super(value);
   }
+
+  public static UserId generate() {
+    return new UserId(UUID.randomUUID());
+  }
 }
