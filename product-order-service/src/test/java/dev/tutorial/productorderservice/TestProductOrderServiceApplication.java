@@ -6,7 +6,7 @@ public class TestProductOrderServiceApplication {
 
   public static void main(String[] args) {
     SpringApplication.from(ProductOrderServiceApplication::main)
-        .with(TestcontainersConfiguration.class)
+        .with(BaseDbIntegrationTest.class)
         .run(args);
   }
 }

@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: product-order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/tutorial?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: lukas
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    fail-on-missing-locations: true
+  data:
+    jdbc:
+      repositories:
+        enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org.flywaydb: DEBUG
+    org.springframework.jdbc.core.Jpa: ERROR
+    org.springframework.boot.autoconfigure: ERROR
+
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    enabled: true
+#  api-docs:
+#    enabled: true
+#    path: /api-docs

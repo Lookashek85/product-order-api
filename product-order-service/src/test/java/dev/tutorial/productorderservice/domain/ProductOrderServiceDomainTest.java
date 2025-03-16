@@ -2,18 +2,18 @@ package dev.tutorial.productorderservice.domain;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-import dev.tutorial.productorderservice.domain.core.OrderService;
+import dev.tutorial.productorderservice.application.services.OrderServiceImpl;
+import dev.tutorial.productorderservice.application.services.ProductServiceImpl;
 import dev.tutorial.productorderservice.domain.core.Product;
-import dev.tutorial.productorderservice.domain.core.ProductService;
 import dev.tutorial.productorderservice.domain.core.User;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Email;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
+import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
-import dev.tutorial.productorderservice.domain.core.valueobjects.Timestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.UserId;
-import dev.tutorial.productorderservice.domain.services.OrderServiceImpl;
-import dev.tutorial.productorderservice.domain.services.ProductServiceImpl;
+import dev.tutorial.productorderservice.domain.services.OrderService;
+import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -59,7 +59,7 @@ class ProductOrderServiceDomainTest {
     Assertions.assertEquals(user.email(), order.buyerEmail());
     Assertions.assertIterableEquals(productList, order.products());
     var expectedTotalPrice = price.multiply(new BigDecimal(productList.size()));
-    Assertions.assertTrue(expectedTotalPrice.compareTo(order.totalPrice().getValue()) == 0);
+    Assertions.assertEquals(0, expectedTotalPrice.compareTo(order.totalPrice().getValue()));
   }
 
   @Test
@@ -83,12 +83,12 @@ class ProductOrderServiceDomainTest {
     // THEN later order should contain updated product while first order remains unchanged.
 
     Assertions.assertIterableEquals(productList, orderOne.products());
-    Assertions.assertTrue(
-        expectedTotalPriceOrderOne.compareTo(orderOne.totalPrice().getValue()) == 0);
+    Assertions.assertEquals(
+        0, expectedTotalPriceOrderOne.compareTo(orderOne.totalPrice().getValue()));
 
     Assertions.assertIterableEquals(updatedProductList, orderTwo.products());
-    Assertions.assertTrue(
-        expectedTotalPriceOrderTwo.compareTo(orderTwo.totalPrice().getValue()) == 0);
+    Assertions.assertEquals(
+        0, expectedTotalPriceOrderTwo.compareTo(orderTwo.totalPrice().getValue()));
   }
 
   @Test
@@ -97,7 +97,7 @@ class ProductOrderServiceDomainTest {
     var daysAgo = 20;
 
     Instant twentyDaysAgo = Instant.now().minus(daysAgo, DAYS);
-    testTimestampProvider.setFixedTimestamp(new Timestamp(twentyDaysAgo));
+    testTimestampProvider.setFixedTimestamp(new OrderTimestamp(twentyDaysAgo));
 
     var productNames = List.of("chocolate");
     var price = new BigDecimal(10);
@@ -105,7 +105,6 @@ class ProductOrderServiceDomainTest {
 
     var orderOne = orderService.createOrder(user, productList);
     var orderTwo = orderService.createOrder(user, productList);
-    var orderThree = orderService.createOrder(user, productList);
 
     testTimestampProvider.setFixedTimestamp(null); // now
     var orderFour = orderService.createOrder(user, productList);
@@ -117,16 +116,16 @@ class ProductOrderServiceDomainTest {
     // WHEN search with specific dates is applied
     var ordersFrom10daysAgoToNow =
         orderService.getOrders(
-            new Timestamp(Instant.now().minus(10, DAYS)), new Timestamp(Instant.now()));
-
+            new OrderTimestamp(Instant.now().minus(10, DAYS)), new OrderTimestamp(Instant.now()));
     // THEN only orders within given time range are returned and rest are discarded
     Assertions.assertIterableEquals(ordersFrom10daysAgoToNow, expectedFoundOrders);
-    var from20daysAgo = new Timestamp(Instant.now().minus(20, DAYS));
-    var to15daysAgo = new Timestamp(Instant.now().minus(15, DAYS));
-    var expectedFoundPastOrders = List.of(orderOne, orderTwo, orderThree);
+
+    var expectedFoundEarliestOrders = List.of(orderOne, orderTwo);
+    var from20daysAgo = new OrderTimestamp(Instant.now().minus(20, DAYS));
+    var to15daysAgo = new OrderTimestamp(Instant.now().minus(15, DAYS));
     var ordersFrom20daysAgo = orderService.getOrders(from20daysAgo, to15daysAgo);
-    // TODO FIX CODE LOGIC
-    //    Assertions.assertIterableEquals(ordersFrom20daysAgo, expectedFoundPastOrders);
+
+    Assertions.assertIterableEquals(ordersFrom20daysAgo, expectedFoundEarliestOrders);
   }
 
   private List<Product> createListOfProducts(List<String> names, BigDecimal price) {
@@ -146,15 +145,15 @@ class ProductOrderServiceDomainTest {
   }
 
   private static class TestTimestampProvider implements TimestampProvider {
-    private Timestamp fixedTimestamp;
+    private OrderTimestamp fixedOrderTimestamp;
 
-    void setFixedTimestamp(Timestamp timestamp) {
-      this.fixedTimestamp = timestamp;
+    void setFixedTimestamp(OrderTimestamp orderTimestamp) {
+      this.fixedOrderTimestamp = orderTimestamp;
     }
 
     @Override
-    public Timestamp now() {
-      return fixedTimestamp != null ? fixedTimestamp : new Timestamp(Instant.now());
+    public OrderTimestamp now() {
+      return fixedOrderTimestamp != null ? fixedOrderTimestamp : new OrderTimestamp(Instant.now());
     }
   }
 }

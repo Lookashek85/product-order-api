@@ -1,11 +1,11 @@
 package dev.tutorial.productorderservice.utils;
 
-import dev.tutorial.productorderservice.domain.core.valueobjects.Timestamp;
+import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import java.time.Instant;
 
 public class SystemTimestampProvider implements TimestampProvider {
   @Override
-  public Timestamp now() {
-    return new Timestamp(Instant.now());
+  public OrderTimestamp now() {
+    return new OrderTimestamp(Instant.now());
   }
 }

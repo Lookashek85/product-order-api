@@ -1,9 +1,9 @@
-package dev.tutorial.productorderservice.domain.services;
+package dev.tutorial.productorderservice.application.services;
 
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
-import dev.tutorial.productorderservice.domain.core.ProductService;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
+import dev.tutorial.productorderservice.domain.services.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

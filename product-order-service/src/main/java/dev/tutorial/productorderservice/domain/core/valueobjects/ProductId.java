@@ -10,4 +10,8 @@ public class ProductId extends BaseId<ProductId> {
   public static ProductId generate() {
     return new ProductId(UUID.randomUUID());
   }
+
+  public static ProductId fromUUID(UUID uuid) {
+    return new ProductId(uuid);
+  }
 }
