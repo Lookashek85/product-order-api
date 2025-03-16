@@ -3,9 +3,9 @@ package dev.tutorial.productorderservice.domain.core.valueobjects;
 import java.time.Instant;
 import java.util.Objects;
 
-public record Timestamp(Instant value) {
+public record OrderTimestamp(Instant value) {
 
-  public Timestamp {
+  public OrderTimestamp {
     if (value == null) {
       throw new NullPointerException("Timestamp cannot be null");
     }
@@ -15,8 +15,8 @@ public record Timestamp(Instant value) {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Timestamp timestamp = (Timestamp) o;
-    return Objects.equals(value, timestamp.value);
+    OrderTimestamp orderTimestamp = (OrderTimestamp) o;
+    return Objects.equals(value, orderTimestamp.value);
   }
 
   @Override

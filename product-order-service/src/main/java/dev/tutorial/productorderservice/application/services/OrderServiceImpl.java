@@ -1,15 +1,17 @@
-package dev.tutorial.productorderservice.domain.services;
+package dev.tutorial.productorderservice.application.services;
 
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Order;
-import dev.tutorial.productorderservice.domain.core.OrderService;
 import dev.tutorial.productorderservice.domain.core.Product;
-import dev.tutorial.productorderservice.domain.core.ProductService;
 import dev.tutorial.productorderservice.domain.core.User;
 import dev.tutorial.productorderservice.domain.core.valueobjects.OrderId;
+import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
-import dev.tutorial.productorderservice.domain.core.valueobjects.Timestamp;
+import dev.tutorial.productorderservice.domain.services.OrderService;
+import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public List<Order> getOrders(Timestamp from, Timestamp to) {
+  public List<Order> getOrders(OrderTimestamp from, OrderTimestamp to) {
     validateFromTo(from, to);
     return orders.stream()
         .filter(order -> isOrderWithinTimeRange(order, from, to))
@@ -69,12 +71,15 @@ public class OrderServiceImpl implements OrderService {
   }
 
   // todo make cleaner
-  private boolean isOrderWithinTimeRange(Order order, Timestamp from, Timestamp to) {
-    return order.orderTimestamp().value().compareTo(from.value()) >= 0
-        && order.orderTimestamp().value().compareTo(to.value()) <= 0;
+  private boolean isOrderWithinTimeRange(Order order, OrderTimestamp from, OrderTimestamp to) {
+    Instant orderDate = order.orderTimestamp().value().truncatedTo(ChronoUnit.DAYS);
+    Instant fromDate = from.value().truncatedTo(ChronoUnit.DAYS);
+    Instant toDate = to.value().truncatedTo(ChronoUnit.DAYS);
+
+    return !orderDate.isBefore(fromDate) && !orderDate.isAfter(toDate);
   }
 
-  private void validateFromTo(Timestamp from, Timestamp to) {
+  private void validateFromTo(OrderTimestamp from, OrderTimestamp to) {
     if (from == null || to == null) {
       throw new DomainError(
           Order.class.getName(),

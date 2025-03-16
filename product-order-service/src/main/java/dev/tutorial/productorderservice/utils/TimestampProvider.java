@@ -1,7 +1,7 @@
 package dev.tutorial.productorderservice.utils;
 
-import dev.tutorial.productorderservice.domain.core.valueobjects.Timestamp;
+import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 
 public interface TimestampProvider {
-  Timestamp now();
+  OrderTimestamp now();
 }

@@ -47,6 +47,19 @@ Development went ok, I made few minor changes to my model, I tested domain code 
 issue with resolving order dates, I will look into it tomorrow. I'm done for today, Java switch was a bit harder 
 than I thought, I reminded to myself why I loved Kotlin so much when first introduced to it ;)
 
+### Day 2 - Stage 4 - Add persistence, go onion ;) 
+First, fixed dates bug, I didn't round up days properly and was comparing by millis accuracy :/ 
+Since my domain tests were passing all business requirements, I decided its time to add persistence layer, 
+say hello to a good old friend MySQL since recently Postgres has been my SQL buddy.
+Started with refactoring domain to be more complaint with onion approach, lets see how it goes...
+
+## Stage 4 retro 
+I haven't completely finished what I planned, even though I have working app, when running the build, I get some weird 
+hikari connections timeout, will need to look into test containers to fix this. 
+I've stomped into serious issues when setting up Wildfly for migrations, this took definitely too log, I should have choosen Postgres
+because majority of issues with persistence layer was caused by my lack of mysql knowledge... 
+
+
 
 
 
