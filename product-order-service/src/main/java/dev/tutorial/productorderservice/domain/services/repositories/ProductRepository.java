@@ -2,6 +2,7 @@ package dev.tutorial.productorderservice.domain.services.repositories;
 
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
+import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,10 @@ public interface ProductRepository {
   List<Product> findAll();
 
   List<Product> findAllByIds(List<ProductId> ids);
+
+  boolean existsById(ProductId id);
+
+  boolean existsByName(Name name);
 
   void deleteAll();
 }

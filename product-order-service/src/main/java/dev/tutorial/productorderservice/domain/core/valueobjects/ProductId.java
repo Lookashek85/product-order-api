@@ -14,4 +14,8 @@ public class ProductId extends BaseId<ProductId> {
   public static ProductId fromUUID(UUID uuid) {
     return new ProductId(uuid);
   }
+
+  public static ProductId fromString(String productId) {
+    return new ProductId(UUID.fromString(productId));
+  }
 }

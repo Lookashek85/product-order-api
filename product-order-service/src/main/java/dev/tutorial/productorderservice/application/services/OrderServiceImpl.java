@@ -15,7 +15,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrderServiceImpl implements OrderService {
   private final TimestampProvider timestampProvider;
 
@@ -69,7 +71,6 @@ public class OrderServiceImpl implements OrderService {
           }
         });
   }
-
 
   private boolean isOrderWithinTimeRange(Order order, OrderTimestamp from, OrderTimestamp to) {
     Instant orderDate = order.orderTimestamp().value().truncatedTo(ChronoUnit.DAYS);

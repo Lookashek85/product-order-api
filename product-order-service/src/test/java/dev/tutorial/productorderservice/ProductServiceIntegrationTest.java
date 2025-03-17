@@ -1,4 +1,3 @@
 package dev.tutorial.productorderservice;
 
-public class ProductServiceIntegrationTest {
-}
+public class ProductServiceIntegrationTest {}
