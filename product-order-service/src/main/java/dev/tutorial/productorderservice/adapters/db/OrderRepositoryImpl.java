@@ -6,12 +6,11 @@ import dev.tutorial.productorderservice.domain.core.Order;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
+import dev.tutorial.productorderservice.utils.TimestampProvider;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import dev.tutorial.productorderservice.utils.TimestampProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -26,7 +25,9 @@ public class OrderRepositoryImpl implements OrderRepository {
   private final TimestampProvider timestampProvider;
 
   public OrderRepositoryImpl(
-      ProductRepository productRepository, OrdersJpaRepository ordersJpaRepository, TimestampProvider timestampProvider) {
+      ProductRepository productRepository,
+      OrdersJpaRepository ordersJpaRepository,
+      TimestampProvider timestampProvider) {
     this.productRepository = productRepository;
     this.ordersJpaRepository = ordersJpaRepository;
     this.timestampProvider = timestampProvider;
@@ -46,6 +47,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
   @Override
   public List<Order> findWithTimeRange(Instant from, Instant to) {
+
     return ordersJpaRepository
         .findAllWithTimeRange(Timestamp.from(from), Timestamp.from(to))
         .stream()

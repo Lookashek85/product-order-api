@@ -4,6 +4,8 @@ import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.ProductService;
+import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,8 +54,8 @@ public class ProductServiceImpl implements ProductService {
 
     if (!products.stream().anyMatch(pt -> pt.productId().equals(updatedProduct.productId()))) {
       throw new DomainError(
-          Product.class.getName(),
-          "No product with Id= " + updatedProduct.productId() + " exists for update! ");
+              Product.class.getName(),
+              "No product with Id= " + updatedProduct.productId() + " exists for update! ");
     }
     products.removeIf(p -> p.productId().equals(updatedProduct.productId()));
     products.add(updatedProduct);

@@ -47,7 +47,7 @@ public class OrderDb {
     var id = order.orderId() != null ? order.orderId().getValue() : UUID.randomUUID();
     var buyerEmail = order.buyerEmail().value();
     var totalValue = order.totalPrice().getValue();
-    //overwritten in repo by timestampProvider
+    // overwritten in repo by timestampProvider
     var orderTimestamp = Timestamp.from(order.orderTimestamp().value());
     var products = order.products().stream().map(ProductDb::toDb).toList();
 

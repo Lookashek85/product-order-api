@@ -1,7 +1,5 @@
 package dev.tutorial.productorderservice.domain;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 import dev.tutorial.productorderservice.application.services.OrderServiceImpl;
 import dev.tutorial.productorderservice.application.services.ProductServiceImpl;
 import dev.tutorial.productorderservice.domain.core.Product;
@@ -14,15 +12,19 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.UserId;
 import dev.tutorial.productorderservice.domain.services.OrderService;
 import dev.tutorial.productorderservice.domain.services.ProductService;
+import dev.tutorial.productorderservice.domain.services.ProductServiceDomainImpl;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 // Add tests for validation
 class ProductOrderServiceDomainTest {
@@ -36,7 +38,7 @@ class ProductOrderServiceDomainTest {
       new User(UserId.generate(), new Name("Lukas"), new Email("lukas@gmail.com"));
 
   public ProductOrderServiceDomainTest() {
-    this.productService = new ProductServiceImpl();
+    this.productService = new ProductServiceDomainImpl();
     this.testTimestampProvider = new TestTimestampProvider();
     this.orderService = new OrderServiceImpl(productService, testTimestampProvider);
   }

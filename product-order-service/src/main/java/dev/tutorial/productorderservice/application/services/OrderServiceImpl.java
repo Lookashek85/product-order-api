@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         });
   }
 
-  // todo make cleaner
+
   private boolean isOrderWithinTimeRange(Order order, OrderTimestamp from, OrderTimestamp to) {
     Instant orderDate = order.orderTimestamp().value().truncatedTo(ChronoUnit.DAYS);
     Instant fromDate = from.value().truncatedTo(ChronoUnit.DAYS);
