@@ -17,6 +17,10 @@ public class Price {
     this.value = value.setScale(2, RoundingMode.HALF_UP); // Normalize to 2 decimal places
   }
 
+  public static Price of(BigDecimal value) {
+    return new Price(value);
+  }
+
   public BigDecimal getValue() {
     return value;
   }

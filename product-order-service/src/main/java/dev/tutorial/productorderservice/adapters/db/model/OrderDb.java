@@ -6,6 +6,7 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.OrderId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -36,7 +37,7 @@ public class OrderDb {
   private BigDecimal totalValue;
   private Timestamp orderTimestamp;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "order_product",
       joinColumns = @JoinColumn(name = "order_id"),
@@ -61,7 +62,6 @@ public class OrderDb {
     var orderTimestamp =
         new OrderTimestamp(Instant.ofEpochMilli(orderDb.getOrderTimestamp().getTime()));
 
-    // Convert products to domain objects
     var products = orderDb.getProducts().stream().map(ProductDb::toDomain).toList();
 
     return new Order(orderId, products, totalPrice, buyerEmail, orderTimestamp);

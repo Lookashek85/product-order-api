@@ -60,6 +60,11 @@ I've stomped into serious issues when setting up Wildfly for migrations, this to
 because majority of issues with persistence layer was caused by my lack of mysql knowledge... 
 
 
+### Day 3 - http layer, first integration tests
+I didn't manage to complete everything, I haven't got that much time as expected, managed to add http layer and tests for it
+but noticed some problems with repo tests, will look into them tomorrow, its late and I'm tired ;),
+Tomorrow is deadline so I need to get the app to work for required features... 
+In worst case scenario, I woudld expect app to start up and expose API, maybe it wont be fully working but lets see....
 
 
 

@@ -16,6 +16,7 @@ public abstract class BaseDbIntegrationTest {
   @Container
   public static MySQLContainer<?> mysqlContainer =
       new MySQLContainer<>("mysql:8.0")
+          .withEnv("MYSQL_TIME_ZONE", "UTC")
           .withDatabaseName("tutorial")
           .withUsername("lukas")
           .withPassword("password");
@@ -26,10 +27,12 @@ public abstract class BaseDbIntegrationTest {
         "spring.datasource.url",
         () ->
             mysqlContainer.getJdbcUrl()
-                + "?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
+                + "?useUnicode=true"
+                + "&characterEncoding=UTF-8"
+                + "&serverTimezone=UTC"
+                + "&useLegacyDatetimeCode=false" // Force modern datetime handling
+                + "&connectionTimeZone=UTC");
     registry.add("spring.datasource.username", mysqlContainer::getUsername);
     registry.add("spring.datasource.password", mysqlContainer::getPassword);
-    registry.add("spring.datasource.hikari.max-lifetime", () -> "25000");
-    registry.add("spring.datasource.hikari.idle-timeout", () -> "10000");
   }
 }

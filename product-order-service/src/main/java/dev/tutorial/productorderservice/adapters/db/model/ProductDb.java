@@ -30,13 +30,12 @@ public class ProductDb {
 
   public static Product toDomain(ProductDb productDb) {
     return new Product(
-        ProductId.fromUUID(productDb.id),
+        ProductId.fromUUID(productDb.getId()),
         new Name(productDb.getName()),
         new Price(productDb.getPrice()));
   }
 
   public static ProductDb toDb(Product product) {
-    var id = product.productId() != null ? product.productId().getValue() : UUID.randomUUID();
-    return new ProductDb(id, product.productName().value(), product.price().getValue());
+    return new ProductDb(product.productId().getValue(), product.productName().value(), product.price().getValue());
   }
 }

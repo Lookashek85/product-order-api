@@ -4,15 +4,19 @@ import dev.tutorial.productorderservice.adapters.db.model.ProductDb;
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.BaseId;
+import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
+import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Primary
 public class ProductRepositoryImpl implements ProductRepository {
 
   private final Logger log = LoggerFactory.getLogger(ProductRepositoryImpl.class);
@@ -25,7 +29,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
   @Override
   public Product save(Product product) {
-    log.debug("Saving product {}", product);
     var dbProduct = productJpaRepository.save(ProductDb.toDb(product));
     return ProductDb.toDomain(dbProduct);
   }
@@ -67,6 +70,16 @@ public class ProductRepositoryImpl implements ProductRepository {
     return productJpaRepository.findAllById(ids.stream().map(BaseId::getValue).toList()).stream()
         .map(ProductDb::toDomain)
         .toList();
+  }
+
+  @Override
+  public boolean existsById(ProductId id) {
+    return productJpaRepository.existsById(id.getValue());
+  }
+
+  @Override
+  public boolean existsByName(Name name) {
+    return productJpaRepository.existsByName(name.value());
   }
 
   @Override

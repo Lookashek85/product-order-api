@@ -1,8 +1,14 @@
 package dev.tutorial.productorderservice.integration.db;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import dev.tutorial.productorderservice.BaseDbIntegrationTest;
 import dev.tutorial.productorderservice.ProductOrderServiceApplication;
 import dev.tutorial.productorderservice.TestTimestampProvider;
+import dev.tutorial.productorderservice.adapters.db.OrdersJpaRepository;
 import dev.tutorial.productorderservice.domain.core.Order;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Email;
@@ -13,6 +19,10 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +32,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 @ActiveProfiles("test")
-@SpringBootTest(classes = {ProductOrderServiceApplication.class, OrderRepositoryTest.TestConfig.class})
+@SpringBootTest(
+    classes = {ProductOrderServiceApplication.class, OrderRepositoryTest.TestConfig.class})
 public class OrderRepositoryTest extends BaseDbIntegrationTest {
 
   private final Email buyerEmail = new Email("some@email.com");
 
   @Autowired private ProductRepository productRepository;
   @Autowired private OrderRepository orderRepository;
+  @Autowired private OrdersJpaRepository ordersJpaRepository;
 
-  @Autowired
-  private TimestampProvider timestampProvider;
+  @Autowired private TimestampProvider timestampProvider;
 
   @BeforeEach
   void setUp() {
@@ -68,7 +71,7 @@ public class OrderRepositoryTest extends BaseDbIntegrationTest {
 
   @Test
   void shouldCreateAndRetrieveOrdersWithUpdatedProducts() {
-    var product1 = new Product(ProductId.generate(), new Name("milk"), new Price(BigDecimal.TEN));
+    var product1 = new Product(ProductId.generate(), Name.of("milk"), new Price(BigDecimal.TEN));
     productRepository.save(product1);
     var products = List.of(product1);
     var total = product1.price();
@@ -92,34 +95,41 @@ public class OrderRepositoryTest extends BaseDbIntegrationTest {
     assertThat(nextOrderSaved.products()).isEqualTo(updatedProductsList);
   }
 
-    @Test
-    void shouldRetrieveOrdersByGivenTimeRange() {
-      // GIVEN orders were created on different dates
-      var daysAgo = 20;
-      var twentyDaysAgo = Instant.now().minus(daysAgo, DAYS);
-      ((TestTimestampProvider) timestampProvider).setFixedTimestamp(twentyDaysAgo);
+  @Test
+  void shouldRetrieveOrdersByGivenTimeRange() {
+    // GIVEN orders were created on different dates
+    var daysAgo = 20;
+    var twentyDaysAgo = Instant.now().minus(daysAgo, DAYS).truncatedTo(MILLIS);
+    ((TestTimestampProvider) timestampProvider).setFixedTimestamp(twentyDaysAgo);
 
-      var milk = new Product(ProductId.generate(), new Name("milk"), new Price(BigDecimal.TEN));
-      var chocolate = new Product(ProductId.generate(), new Name("chocolate"), new Price(BigDecimal.TWO));
-      productRepository.save(milk);
-      productRepository.save(chocolate);
-      var productsEarlyOrder = List.of(milk);
-      var earlyOrder = new Order(null, productsEarlyOrder, milk.price(), buyerEmail, new OrderTimestamp(Instant.now()));
+    var milk = new Product(ProductId.generate(), new Name("milk"), new Price(BigDecimal.TEN));
+    var chocolate =
+        new Product(ProductId.generate(), new Name("chocolate"), new Price(BigDecimal.TWO));
+    productRepository.save(milk);
+    productRepository.save(chocolate);
+    var productsEarlyOrder = List.of(milk);
+    var earlyOrder =
+        new Order(
+            null, productsEarlyOrder, milk.price(), buyerEmail, new OrderTimestamp(Instant.now()));
+    var orderSavedEarly = orderRepository.create(earlyOrder);
 
-      var orderSavedEarly = orderRepository.create(earlyOrder);
+    ((TestTimestampProvider) timestampProvider).setFixedTimestamp(Instant.now());
 
-      ((TestTimestampProvider) timestampProvider).setFixedTimestamp(Instant.now());
+    var laterOrder =
+        new Order(
+            null, productsEarlyOrder, milk.price(), buyerEmail, new OrderTimestamp(Instant.now()));
+    var savedLaterOrder = orderRepository.create(laterOrder);
+    var to15daysAgo = twentyDaysAgo.plus(5, DAYS);
+    // WHEN Search is requested with specified time range
+    var earliestOrders =
+        orderRepository.findWithTimeRange(twentyDaysAgo.minus(5, SECONDS), to15daysAgo);
 
-      var laterOrder = new Order(null, productsEarlyOrder, milk.price(), buyerEmail, new OrderTimestamp(Instant.now()));
+    // THEN Only orders within specified time range are returned
+    assertThat(earliestOrders).isNotNull();
+    assertThat(earliestOrders.size()).isEqualTo(1);
+    assertThat(earliestOrders.getFirst().orderId()).isEqualTo(orderSavedEarly.orderId());
+  }
 
-      var orderSavedLater = orderRepository.create(laterOrder);
-
-      // Retrieve orders within the correct time range
-      var earliestOrders = orderRepository.findWithTimeRange(twentyDaysAgo, twentyDaysAgo.minus(5, DAYS));
-      assertThat(earliestOrders).isNotNull();
-      assertThat(earliestOrders.size()).isEqualTo(1);
-      assertThat(earliestOrders.getFirst().orderId()).isEqualTo(orderSavedEarly.orderId());
-    }
   @TestConfiguration
   static class TestConfig {
     @Bean
