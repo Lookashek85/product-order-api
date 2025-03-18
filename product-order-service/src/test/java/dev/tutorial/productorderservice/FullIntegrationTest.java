@@ -1,10 +1,9 @@
 package dev.tutorial.productorderservice;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.tutorial.productorderservice.adapters.http.requests.CreateOrderRequest;
 import dev.tutorial.productorderservice.adapters.http.responses.OrderResponse;
+import dev.tutorial.productorderservice.adapters.http.responses.ProductResponse;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
@@ -13,21 +12,26 @@ import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
-import java.math.BigDecimal;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@SpringBootTest(
-    classes = ProductOrderServiceApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.data.util.Predicates.isTrue;
+
+//@SpringBootTest(
+//    classes = ProductOrderServiceApplication.class,
+//    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@ActiveProfiles("test")
 public class FullIntegrationTest extends BaseDbIntegrationTest {
 
   private WebTestClient webTestClient;
@@ -62,8 +66,8 @@ public class FullIntegrationTest extends BaseDbIntegrationTest {
 
     var productBread =
         new Product(ProductId.generate(), Name.of("bread"), Price.of(new BigDecimal("12.5")));
-    var savedProductBread = productRepository.save(productMilk);
-    var productBreadId = savedProductMilk.productId();
+    var savedProductBread = productRepository.save(productBread);
+    var productBreadId = savedProductBread.productId();
 
     var createOrderRequest =
         new CreateOrderRequest(
@@ -81,10 +85,15 @@ public class FullIntegrationTest extends BaseDbIntegrationTest {
 
     response.expectStatus().isCreated();
 
-    var orderCreatedResponse =
+    var orderOneCreatedResponse =
         response.expectBody(OrderResponse.class).returnResult().getResponseBody();
 
-    assertThat(orderCreatedResponse).isNotNull();
-    assertThat(orderCreatedResponse.getBuyerEmail()).isEqualTo(buyerEmail);
+    assertThat(orderOneCreatedResponse).isNotNull();
+    var expectedProductIds = Set.of(productMilkId.getValue().toString(), productBreadId.getValue().toString());
+    var actualProductIds = orderOneCreatedResponse.getProducts().stream().map(ProductResponse::getProductId).collect(Collectors.toSet());
+
+    assertThat(orderOneCreatedResponse).isNotNull();
+    assertThat(orderOneCreatedResponse.getBuyerEmail()).isEqualTo(buyerEmail);
+    assertThat(expectedProductIds.containsAll(actualProductIds)).isTrue();
   }
 }
