@@ -3,6 +3,7 @@ package dev.tutorial.productorderservice.domain.core;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
+
 import java.util.Objects;
 
 public class Product {

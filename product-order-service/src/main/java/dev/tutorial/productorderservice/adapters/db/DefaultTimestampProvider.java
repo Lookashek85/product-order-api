@@ -2,8 +2,9 @@ package dev.tutorial.productorderservice.adapters.db;
 
 import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
-import java.time.Instant;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Component
 public class DefaultTimestampProvider implements TimestampProvider {

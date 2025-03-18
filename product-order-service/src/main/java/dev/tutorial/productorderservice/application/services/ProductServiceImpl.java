@@ -8,12 +8,13 @@ import dev.tutorial.productorderservice.domain.core.ProductNotFound;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -28,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Product createProduct(CreateProductCommand command) {
-    var productName = command.getProductName();
+    var productName = command.productName();
     if (productRepository.existsByName(productName)) {
       throw new DomainError(Product.class.getName(), "Product already exists!");
     }
@@ -79,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   private Product fromCommand(CreateProductCommand command) {
-    return new Product(null, command.getProductName(), command.getPrice());
+    return new Product(null, command.productName(), command.price());
   }
 
   private Product fromCommand(UpdateProductCommand command) {

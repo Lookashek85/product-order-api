@@ -1,9 +1,10 @@
 package dev.tutorial.productorderservice.adapters.http.responses;
 
 import dev.tutorial.productorderservice.domain.core.Product;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor

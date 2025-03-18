@@ -1,13 +1,14 @@
 package dev.tutorial.productorderservice.adapters.http.responses;
 
 import dev.tutorial.productorderservice.domain.core.Order;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 @Data
 @AllArgsConstructor

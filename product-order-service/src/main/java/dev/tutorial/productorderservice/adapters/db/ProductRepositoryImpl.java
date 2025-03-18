@@ -7,12 +7,13 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.BaseId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Primary

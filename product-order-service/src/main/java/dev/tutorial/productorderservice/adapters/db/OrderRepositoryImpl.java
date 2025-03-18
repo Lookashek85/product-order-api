@@ -7,13 +7,14 @@ import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
