@@ -3,10 +3,14 @@ Spring Boot Java simple application serving as base service for products order m
 
 ## Running instructions 
 
+Prerequisites - docker compose 
+
 Application can be started locally using docker-compos in root project of `product-order-service`.
 Clone or download this repository, navigate to `product-order-service` -> `docker-compose` and type in terminal 
 `% docker-compose up --build ` to build docker image then `% docker-compose up -d` to run. 
-To shut down, type `% docker-compose down`
+To shut down, type `% docker-compose down` 
+Application can be acceseed on localhost:8080 , to see the API as Swagger UI, 
+go to http://localhost:8080/swagger-ui.html or if you need JSON with API, go to  http://localhost:8080/api-docs 
 
 
 
