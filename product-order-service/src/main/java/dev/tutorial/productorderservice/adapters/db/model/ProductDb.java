@@ -36,6 +36,7 @@ public class ProductDb {
   }
 
   public static ProductDb toDb(Product product) {
-    return new ProductDb(product.productId().getValue(), product.productName().value(), product.price().getValue());
+    return new ProductDb(
+        product.productId().getValue(), product.productName().value(), product.price().getValue());
   }
 }

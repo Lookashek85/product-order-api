@@ -5,7 +5,6 @@ import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.BaseId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
-import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import java.util.List;
@@ -45,8 +44,13 @@ public class ProductRepositoryImpl implements ProductRepository {
                         ProductDb.class.getName(),
                         "Existing product for update not found using id=" + product.productId()));
 
-    currentDbProduct.setName(product.productName().value());
-    currentDbProduct.setPrice(product.price().getValue());
+    if (product.productName() != null) {
+      currentDbProduct.setName(product.productName().value());
+    }
+    if (product.price() != null) {
+      currentDbProduct.setPrice(product.price().getValue());
+    }
+
     var updatedDbProduct = productJpaRepository.save(currentDbProduct);
 
     log.debug(

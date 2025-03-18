@@ -2,15 +2,13 @@ package dev.tutorial.productorderservice.domain.commands;
 
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
-
-import java.math.BigDecimal;
 import java.util.Objects;
 
-public class ProductCommand {
+public class CreateProductCommand {
   private Name productName;
   private Price price;
 
-  public ProductCommand(Name productName, Price price) {
+  public CreateProductCommand(Name productName, Price price) {
     this.productName = productName;
     this.price = price;
   }
@@ -35,7 +33,7 @@ public class ProductCommand {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    ProductCommand that = (ProductCommand) o;
+    CreateProductCommand that = (CreateProductCommand) o;
     return Objects.equals(productName, that.productName) && Objects.equals(price, that.price);
   }
 

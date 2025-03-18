@@ -11,6 +11,10 @@ public record OrderTimestamp(Instant value) {
     }
   }
 
+  public static OrderTimestamp of(Instant value) {
+    return new OrderTimestamp(value);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

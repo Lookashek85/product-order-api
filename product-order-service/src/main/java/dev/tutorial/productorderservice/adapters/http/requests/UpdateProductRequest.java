@@ -1,16 +1,12 @@
 package dev.tutorial.productorderservice.adapters.http.requests;
 
 import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class UpdateProductRequest extends ProductRequest {
-  private final String productId;
-
-  public UpdateProductRequest(String productName, BigDecimal price, String productId) {
-    super(productName, price);
-    this.productId = productId;
-  }
-
-  public String getProductId() {
-    return this.productId;
-  }
+@Getter
+@AllArgsConstructor
+public class UpdateProductRequest {
+  private String productName;
+  private BigDecimal price;
 }
