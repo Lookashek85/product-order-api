@@ -22,6 +22,10 @@ public record Email(String value) {
     return matcher.find();
   }
 
+  public static Email of(String value) {
+    return new Email(value);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

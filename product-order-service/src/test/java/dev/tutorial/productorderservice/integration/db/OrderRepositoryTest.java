@@ -8,11 +8,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import dev.tutorial.productorderservice.BaseDbIntegrationTest;
 import dev.tutorial.productorderservice.ProductOrderServiceApplication;
 import dev.tutorial.productorderservice.TestTimestampProvider;
-import dev.tutorial.productorderservice.adapters.db.OrdersJpaRepository;
 import dev.tutorial.productorderservice.domain.core.Order;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Email;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
+import dev.tutorial.productorderservice.domain.core.valueobjects.OrderId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
@@ -41,7 +41,6 @@ public class OrderRepositoryTest extends BaseDbIntegrationTest {
 
   @Autowired private ProductRepository productRepository;
   @Autowired private OrderRepository orderRepository;
-  @Autowired private OrdersJpaRepository ordersJpaRepository;
 
   @Autowired private TimestampProvider timestampProvider;
 
@@ -71,21 +70,28 @@ public class OrderRepositoryTest extends BaseDbIntegrationTest {
 
   @Test
   void shouldCreateAndRetrieveOrdersWithUpdatedProducts() {
-    var product1 = new Product(ProductId.generate(), Name.of("milk"), new Price(BigDecimal.TEN));
-    productRepository.save(product1);
-    var products = List.of(product1);
-    var total = product1.price();
+    var product = new Product(ProductId.generate(), Name.of("milk"), new Price(BigDecimal.TEN));
+    productRepository.save(product);
+    var products = List.of(product);
+    var total = product.price();
 
-    var order = new Order(null, products, total, buyerEmail, new OrderTimestamp(Instant.now()));
+    var order =
+        new Order(
+            OrderId.generate(), products, total, buyerEmail, new OrderTimestamp(Instant.now()));
     var orderSaved = orderRepository.create(order);
 
     var updatedName = new Name("chocolate");
     var updatedPrice = new Price(BigDecimal.TWO);
-    var updatedProduct = new Product(product1.productId(), updatedName, updatedPrice);
-    productRepository.save(updatedProduct);
+    var updatedProduct = new Product(product.productId(), updatedName, updatedPrice);
+    productRepository.update(updatedProduct);
     var updatedProductsList = List.of(updatedProduct);
     var nextOrder =
-        new Order(null, updatedProductsList, total, buyerEmail, new OrderTimestamp(Instant.now()));
+        new Order(
+            OrderId.generate(),
+            updatedProductsList,
+            total,
+            buyerEmail,
+            new OrderTimestamp(Instant.now()));
     var nextOrderSaved = orderRepository.create(nextOrder);
 
     assertThat(order).isNotNull();

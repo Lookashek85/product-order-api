@@ -5,7 +5,6 @@ import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.BaseId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
-import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import java.util.List;

@@ -1,20 +1,20 @@
 package dev.tutorial.productorderservice.application.services;
 
-import dev.tutorial.productorderservice.domain.commands.ProductCommand;
+import dev.tutorial.productorderservice.domain.commands.CreateProductCommand;
 import dev.tutorial.productorderservice.domain.commands.UpdateProductCommand;
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
+import dev.tutorial.productorderservice.domain.core.ProductNotFound;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Product createProduct(ProductCommand command) {
+  public Product createProduct(CreateProductCommand command) {
     var productName = command.getProductName();
     if (productRepository.existsByName(productName)) {
       throw new DomainError(Product.class.getName(), "Product already exists!");
@@ -45,6 +45,11 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<Product> getProducts() {
     return productRepository.findAll();
+  }
+
+  @Override
+  public List<Product> getProductsByIds(List<ProductId> productIds) {
+    return productRepository.findAllByIds(productIds);
   }
 
   @Override
@@ -67,8 +72,7 @@ public class ProductServiceImpl implements ProductService {
     var updatedProduct = fromCommand(updateProductCommand);
     log.info("Updating product {}", updatedProduct);
     if (!productRepository.existsById(updatedProduct.productId())) {
-      throw new DomainError(
-          Product.class.getName(),
+      throw new ProductNotFound(
           "No product with Id= " + updatedProduct.productId() + " exists for update! ");
     }
     var updated = productRepository.update(updatedProduct);
@@ -76,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     return updated;
   }
 
-  private Product fromCommand(ProductCommand command) {
+  private Product fromCommand(CreateProductCommand command) {
     return new Product(null, command.getProductName(), command.getPrice());
   }
 

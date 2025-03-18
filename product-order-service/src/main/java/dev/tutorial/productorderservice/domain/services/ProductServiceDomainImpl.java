@@ -1,6 +1,6 @@
 package dev.tutorial.productorderservice.domain.services;
 
-import dev.tutorial.productorderservice.domain.commands.ProductCommand;
+import dev.tutorial.productorderservice.domain.commands.CreateProductCommand;
 import dev.tutorial.productorderservice.domain.commands.UpdateProductCommand;
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
@@ -17,7 +17,7 @@ public class ProductServiceDomainImpl implements ProductService {
   }
 
   @Override
-  public Product createProduct(ProductCommand createProductCommand) {
+  public Product createProduct(CreateProductCommand createProductCommand) {
     // todo domain specific errors
     if (createProductCommand == null) {
       throw new DomainError(Product.class.getName(), "No product specified!");
@@ -37,6 +37,11 @@ public class ProductServiceDomainImpl implements ProductService {
   @Override
   public List<Product> getProducts() {
     return products;
+  }
+
+  @Override
+  public List<Product> getProductsByIds(List<ProductId> productIds) {
+    return List.of();
   }
 
   @Override

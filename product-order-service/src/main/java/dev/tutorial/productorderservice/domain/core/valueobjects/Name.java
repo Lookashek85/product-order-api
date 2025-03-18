@@ -9,6 +9,7 @@ public record Name(String value) {
     }
     this.value = value.trim();
   }
+
   public static Name of(String value) {
     return new Name(value);
   }

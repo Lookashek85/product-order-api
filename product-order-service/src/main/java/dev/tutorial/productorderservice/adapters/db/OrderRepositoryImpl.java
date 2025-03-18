@@ -47,7 +47,6 @@ public class OrderRepositoryImpl implements OrderRepository {
 
   @Override
   public List<Order> findWithTimeRange(Instant from, Instant to) {
-
     return ordersJpaRepository
         .findAllWithTimeRange(Timestamp.from(from), Timestamp.from(to))
         .stream()

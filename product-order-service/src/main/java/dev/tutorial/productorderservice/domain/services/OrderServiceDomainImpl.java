@@ -1,12 +1,13 @@
 package dev.tutorial.productorderservice.domain.services;
 
+import dev.tutorial.productorderservice.domain.commands.CreateOrderCommand;
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Order;
 import dev.tutorial.productorderservice.domain.core.Product;
-import dev.tutorial.productorderservice.domain.core.User;
 import dev.tutorial.productorderservice.domain.core.valueobjects.OrderId;
 import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
+import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +28,29 @@ public class OrderServiceDomainImpl implements OrderService {
   }
 
   @Override
-  public Order createOrder(User user, List<Product> products) throws DomainError {
-    if (user == null) {
-      throw new DomainError(User.class.getName(), "User must be present when creating an order!");
-    }
+  public Order createOrder(CreateOrderCommand createOrderCommand) throws DomainError {
+    var products = getProductsForOrder(createOrderCommand.productIds());
     validateOrderProducts(products);
     var total = calculateTotalOrderPrice(products);
     var order =
-        new Order(OrderId.generate(), products, total, user.email(), timestampProvider.now());
+        new Order(
+            OrderId.generate(),
+            products,
+            total,
+            createOrderCommand.buyerEmail(),
+            timestampProvider.now());
     orders.add(order);
     return order;
+  }
+
+  private List<Product> getProductsForOrder(List<ProductId> productIds) {
+    List<Product> products = new ArrayList<>();
+    productIds.forEach(
+        pId -> {
+          var product = productService.getProductById(pId);
+          product.ifPresent(products::add);
+        });
+    return products;
   }
 
   @Override
