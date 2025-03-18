@@ -8,13 +8,13 @@ import dev.tutorial.productorderservice.domain.core.ProductNotFound;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -67,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  @Transactional
   public Product updateProduct(UpdateProductCommand updateProductCommand) {
     var updatedProduct = fromCommand(updateProductCommand);
     log.info("Updating product {}", updatedProduct);

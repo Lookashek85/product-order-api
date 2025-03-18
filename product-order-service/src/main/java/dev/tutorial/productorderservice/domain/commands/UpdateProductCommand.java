@@ -3,16 +3,13 @@ package dev.tutorial.productorderservice.domain.commands;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
+import lombok.Builder;
+import lombok.Getter;
 
-public class UpdateProductCommand extends CreateProductCommand {
+@Getter
+@Builder
+public class UpdateProductCommand {
   private final ProductId productId;
-
-  public UpdateProductCommand(Name productName, Price price, ProductId productId) {
-    super(productName, price);
-    this.productId = productId;
-  }
-
-  public ProductId getProductId() {
-    return this.productId;
-  }
+  private final Name productName;
+  private final Price price;
 }

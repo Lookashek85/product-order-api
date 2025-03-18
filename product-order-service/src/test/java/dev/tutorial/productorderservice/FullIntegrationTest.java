@@ -1,5 +1,7 @@
 package dev.tutorial.productorderservice;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.tutorial.productorderservice.adapters.http.requests.CreateOrderRequest;
 import dev.tutorial.productorderservice.adapters.http.responses.OrderResponse;
@@ -11,6 +13,8 @@ import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
+import java.math.BigDecimal;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +23,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
     classes = ProductOrderServiceApplication.class,
@@ -54,38 +53,38 @@ public class FullIntegrationTest extends BaseDbIntegrationTest {
   }
 
   @Test
-  void addProducts_update_products_create_order_different_dates()  throws Exception {
-      // GIVEN
-      var buyerEmail = "buyer@email.com";
-      var productMilk = new Product(ProductId.generate(), Name.of("milk"), Price.of(BigDecimal.TEN));
-      var savedProductMilk = productRepository.save(productMilk);
-      var productMilkId = savedProductMilk.productId();
+  void addProducts_update_products_create_order_different_dates() throws Exception {
+    // GIVEN
+    var buyerEmail = "buyer@email.com";
+    var productMilk = new Product(ProductId.generate(), Name.of("milk"), Price.of(BigDecimal.TEN));
+    var savedProductMilk = productRepository.save(productMilk);
+    var productMilkId = savedProductMilk.productId();
 
-      var productBread = new Product(ProductId.generate(), Name.of("bread"), Price.of(new BigDecimal("12.5")));
-      var savedProductBread = productRepository.save(productMilk);
-      var productBreadId = savedProductMilk.productId();
+    var productBread =
+        new Product(ProductId.generate(), Name.of("bread"), Price.of(new BigDecimal("12.5")));
+    var savedProductBread = productRepository.save(productMilk);
+    var productBreadId = savedProductMilk.productId();
 
+    var createOrderRequest =
+        new CreateOrderRequest(
+            buyerEmail,
+            List.of(productMilkId.getValue().toString(), productBreadId.getValue().toString()));
+    var requestBody = objectMapper.writeValueAsString(createOrderRequest);
 
-      var createOrderRequest = new CreateOrderRequest(buyerEmail, List.of(productMilkId.getValue().toString(),
-              productBreadId.getValue().toString()
-              ));
-      var requestBody = objectMapper.writeValueAsString(createOrderRequest);
+    WebTestClient.ResponseSpec response =
+        webTestClient
+            .post()
+            .uri(baseUrl)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(requestBody)
+            .exchange();
 
-      WebTestClient.ResponseSpec response =
-              webTestClient
-                      .post()
-                      .uri(baseUrl)
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .bodyValue(requestBody)
-                      .exchange();
+    response.expectStatus().isCreated();
 
-      response.expectStatus().isCreated();
+    var orderCreatedResponse =
+        response.expectBody(OrderResponse.class).returnResult().getResponseBody();
 
-      var orderCreatedResponse = response.expectBody(OrderResponse.class)
-              .returnResult().getResponseBody();
-
-      assertThat(orderCreatedResponse).isNotNull();
-      assertThat(orderCreatedResponse.getBuyerEmail()).isEqualTo(buyerEmail);
+    assertThat(orderCreatedResponse).isNotNull();
+    assertThat(orderCreatedResponse.getBuyerEmail()).isEqualTo(buyerEmail);
   }
-
 }

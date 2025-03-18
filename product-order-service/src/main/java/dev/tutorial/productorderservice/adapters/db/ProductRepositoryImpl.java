@@ -44,8 +44,13 @@ public class ProductRepositoryImpl implements ProductRepository {
                         ProductDb.class.getName(),
                         "Existing product for update not found using id=" + product.productId()));
 
-    currentDbProduct.setName(product.productName().value());
-    currentDbProduct.setPrice(product.price().getValue());
+    if (product.productName() != null) {
+      currentDbProduct.setName(product.productName().value());
+    }
+    if (product.price() != null) {
+      currentDbProduct.setPrice(product.price().getValue());
+    }
+
     var updatedDbProduct = productJpaRepository.save(currentDbProduct);
 
     log.debug(

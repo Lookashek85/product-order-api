@@ -9,7 +9,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(classes = ProductOrderServiceApplication.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Testcontainers
 public abstract class BaseDbIntegrationTest {
 
@@ -19,7 +19,8 @@ public abstract class BaseDbIntegrationTest {
           .withEnv("MYSQL_TIME_ZONE", "UTC")
           .withDatabaseName("tutorial")
           .withUsername("lukas")
-          .withPassword("password");
+          .withPassword("password")
+          .withReuse(true);
 
   @DynamicPropertySource
   static void registerProperties(DynamicPropertyRegistry registry) {

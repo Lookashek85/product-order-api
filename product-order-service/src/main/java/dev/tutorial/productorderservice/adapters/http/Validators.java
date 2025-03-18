@@ -6,35 +6,52 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Validators {
 
-  protected UpdateProductCommand toValidatedUpdateProductCommand(
+  public UpdateProductCommand toValidatedUpdateProductCommand(
       UpdateProductRequest request, String productId) {
-    if (request.getProductName() == null && request.getPrice() == null) {
-      throw new IllegalArgumentException(
-          "At least a product name or price is required when updating product");
+
+    List<String> productErrors = new ArrayList<>();
+    List<String> priceErrors = new ArrayList<>();
+    var builder = UpdateProductCommand.builder().productId(ProductId.fromString(productId));
+    validateProductName(request, productErrors);
+    validateProductPrice(request, priceErrors);
+
+    if (productErrors.isEmpty() && priceErrors.isEmpty()) {
+      builder
+          .productName(Name.of(request.getProductName()))
+          .price(Price.of(request.getPrice()));
+    } else if (request.getProductName() == null && priceErrors.isEmpty()) {
+      builder.price(Price.of(request.getPrice()));
+    } else if (request.getPrice() == null && productErrors.isEmpty()) {
+      builder.productName(Name.of(request.getProductName()));
+    } else {
+      // validation error
+      var errors = new ArrayList<String>();
+      errors.addAll(productErrors);
+      errors.addAll(priceErrors);
+      throw new IllegalArgumentException(String.join("\n", errors));
     }
-    validateProductName(request);
-    else if (request.getProductName() == null
-        && request.getPrice().compareTo(BigDecimal.ZERO) > 0) {
-      throw new IllegalArgumentException("Price must be a positive value");
-    } else if (request.getPrice() == null && request.getProductName().isEmpty()) {
-      throw new IllegalArgumentException("No name given for updated product");
-    }
-    return new UpdateProductCommand(
-        new Name(request.getProductName()),
-        new Price(request.getPrice()),
-        ProductId.fromString(productId));
+    return builder.build();
   }
 
-  private void validateProductName(UpdateProductRequest request) {
-    if (request.getProductName() == null  || request.getProductName().isEmpty()) {
-     if(request.getPrice() == null){
-       throw new IllegalArgumentException("No name given for updated product");
-     }
+  private void validateProductPrice(UpdateProductRequest request, List<String> errors) {
+    var isInvalidPrice =
+        request.getPrice() == null || request.getPrice().compareTo(BigDecimal.ZERO) < 0;
+    if (isInvalidPrice) {
+      errors.add("Price must be greater than zero");
+    }
+  }
+
+  private void validateProductName(UpdateProductRequest request, List<String> errors) {
+    var isInvalidName = request.getProductName() == null || request.getProductName().isBlank();
+    if (isInvalidName) {
+      errors.add("Product name is required for updating product");
     }
   }
 }

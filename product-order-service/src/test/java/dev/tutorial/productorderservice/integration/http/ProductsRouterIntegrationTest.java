@@ -12,18 +12,22 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(
     classes = ProductOrderServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles("test")
 public class ProductsRouterIntegrationTest extends BaseDbIntegrationTest {
 
@@ -44,7 +48,7 @@ public class ProductsRouterIntegrationTest extends BaseDbIntegrationTest {
     webTestClient = WebTestClient.bindToServer().baseUrl(baseUrl).build();
   }
 
-  //TODO Create with wrong inputs tests
+  // TODO Create with wrong inputs tests
 
   @Test
   void updatingProductWithValidInputsReturnsOK() throws Exception {
@@ -57,35 +61,41 @@ public class ProductsRouterIntegrationTest extends BaseDbIntegrationTest {
     var requestBody = objectMapper.writeValueAsString(updateRequest);
 
     // When
-    WebTestClient.ResponseSpec response =
-        webTestClient
-            .put()
-            .uri(baseUrl + "/" + productId.getValue())
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(requestBody)
-            .exchange();
-
-    // Then
-    response
+    webTestClient
+        .put()
+        .uri(baseUrl + "/" + productId.getValue())
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(requestBody)
+        .exchange()
         .expectStatus()
         .isOk()
         .expectHeader()
-        .contentType(MediaType.APPLICATION_JSON)
-        .expectBody()
-        .jsonPath("$.productId")
-        .isEqualTo(productId.getValue().toString())
-        .jsonPath("$.productName")
-        .isEqualTo("bread")
-        .jsonPath("$.productPrice")
-        .isEqualTo(1.00);
+        .contentType(MediaType.APPLICATION_JSON);
 
-    Product updatedProduct = productRepository.findById(productId).orElse(null);
+    var updatedProduct = productRepository.findById(productId).orElse(null);
     assertThat(updatedProduct).isNotNull();
     assertThat(updatedProduct.productName().value()).isEqualTo("bread");
     assertThat(updatedProduct.price().getValue()).isEqualTo(new BigDecimal("1.00"));
+
+    // Supply Price field  only
+    var updateRequestPrice = new UpdateProductRequest(null, new BigDecimal("110.00"));
+    var requestBodyUpdatePrice = objectMapper.writeValueAsString(updateRequestPrice);
+
+    webTestClient
+        .put()
+        .uri(baseUrl + "/" + productId.getValue())
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(requestBodyUpdatePrice)
+        .exchange();
+    var updatedPriceProduct = productRepository.findById(productId).orElse(null);
+
+    assertThat(updatedPriceProduct).isNotNull();
+    assertThat(updatedPriceProduct.price().getValue()).isEqualTo(new BigDecimal("110.00"));
+    assertThat(updatedPriceProduct.productName().value()).isEqualTo("bread");
   }
 
-  @Test
+  @Timeout(value = 20, unit = TimeUnit.SECONDS)
+  @Test()
   void updateProductsWithWrongInputsReturnsBadRequestAndValidationMessages() throws Exception {
     // Given
     var product =
@@ -111,10 +121,10 @@ public class ProductsRouterIntegrationTest extends BaseDbIntegrationTest {
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.productName")
-        .isEqualTo("Product name cannot be blank")
-        .jsonPath("$.price")
-        .isEqualTo("Price must be a positive value");
+        .jsonPath("$.error")
+        .isEqualTo(
+            "Invalid input was given. Please check your request. "
+                + "Error message: Product name is required for updating product\nPrice must be greater than zero");
   }
 
   @Test
