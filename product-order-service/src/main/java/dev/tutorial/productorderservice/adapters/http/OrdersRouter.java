@@ -1,5 +1,6 @@
 package dev.tutorial.productorderservice.adapters.http;
 
+import dev.tutorial.productorderservice.adapters.http.api.OrdersOpenApi;
 import dev.tutorial.productorderservice.adapters.http.requests.CreateOrderRequest;
 import dev.tutorial.productorderservice.adapters.http.responses.OrderResponse;
 import dev.tutorial.productorderservice.adapters.http.responses.OrdersResponse;
@@ -9,6 +10,8 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.OrderService;
 import jakarta.validation.Valid;
+import java.time.Instant;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/v1/orders")
-public class OrdersRouter {
+public class OrdersRouter implements OrdersOpenApi {
 
   private final Logger log = LoggerFactory.getLogger(OrdersRouter.class);
 

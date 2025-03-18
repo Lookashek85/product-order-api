@@ -195,7 +195,12 @@ public class FullIntegrationTest extends BaseDbIntegrationTest {
 
     var uriAllOrders = baseUrl + "?from=" + from20daysAgo + "&to=" + toLatest;
     var allOrdersResponse =
-            webTestClient.get().uri(uriAllOrders).accept(MediaType.APPLICATION_JSON).exchange().expectStatus()
+        webTestClient
+            .get()
+            .uri(uriAllOrders)
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
             .isOk()
             .expectBody(OrdersResponse.class)
             .returnResult()
@@ -203,6 +208,5 @@ public class FullIntegrationTest extends BaseDbIntegrationTest {
 
     assertThat(allOrdersResponse).isNotNull();
     assertThat(allOrdersResponse.getOrders()).size().isEqualTo(2);
-
   }
 }

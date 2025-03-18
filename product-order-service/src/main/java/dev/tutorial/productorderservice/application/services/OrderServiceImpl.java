@@ -11,9 +11,8 @@ import dev.tutorial.productorderservice.domain.services.OrderService;
 import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServiceImpl implements OrderService {

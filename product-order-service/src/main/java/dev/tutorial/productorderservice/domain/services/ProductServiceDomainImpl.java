@@ -5,7 +5,6 @@ import dev.tutorial.productorderservice.domain.commands.UpdateProductCommand;
 import dev.tutorial.productorderservice.domain.core.DomainError;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +24,7 @@ public class ProductServiceDomainImpl implements ProductService {
     }
     var product =
         new Product(
-            ProductId.generate(),
-            createProductCommand.productName(),
-            createProductCommand.price());
+            ProductId.generate(), createProductCommand.productName(), createProductCommand.price());
     if (products.contains(product)) {
       throw new DomainError(Product.class.getName(), "Product already exists!");
     }

@@ -1,5 +1,6 @@
 package dev.tutorial.productorderservice.adapters.http;
 
+import dev.tutorial.productorderservice.adapters.http.api.ProductsOpenApi;
 import dev.tutorial.productorderservice.adapters.http.requests.ProductRequest;
 import dev.tutorial.productorderservice.adapters.http.requests.UpdateProductRequest;
 import dev.tutorial.productorderservice.adapters.http.responses.ProductResponse;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/products")
-public class ProductsRouter {
+public class ProductsRouter implements ProductsOpenApi {
 
   private final Logger log = LoggerFactory.getLogger(ProductsRouter.class);
 

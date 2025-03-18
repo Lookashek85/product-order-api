@@ -1,10 +1,9 @@
 package dev.tutorial.productorderservice.adapters.http.responses;
 
 import dev.tutorial.productorderservice.domain.core.Product;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor

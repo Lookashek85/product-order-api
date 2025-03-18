@@ -9,7 +9,6 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.OrderTimestamp;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

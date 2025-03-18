@@ -1,13 +1,12 @@
 package dev.tutorial.productorderservice.adapters.db;
 
+import java.nio.ByteBuffer;
+import java.util.UUID;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.nio.ByteBuffer;
-import java.util.UUID;
 
 @Component
 public class DataInitializer implements ApplicationRunner {
