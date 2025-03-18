@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Product createProduct(CreateProductCommand command) {
-    var productName = command.getProductName();
+    var productName = command.productName();
     if (productRepository.existsByName(productName)) {
       throw new DomainError(Product.class.getName(), "Product already exists!");
     }
@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   private Product fromCommand(CreateProductCommand command) {
-    return new Product(null, command.getProductName(), command.getPrice());
+    return new Product(null, command.productName(), command.price());
   }
 
   private Product fromCommand(UpdateProductCommand command) {

@@ -24,9 +24,7 @@ public class ProductServiceDomainImpl implements ProductService {
     }
     var product =
         new Product(
-            ProductId.generate(),
-            createProductCommand.getProductName(),
-            createProductCommand.getPrice());
+            ProductId.generate(), createProductCommand.productName(), createProductCommand.price());
     if (products.contains(product)) {
       throw new DomainError(Product.class.getName(), "Product already exists!");
     }
