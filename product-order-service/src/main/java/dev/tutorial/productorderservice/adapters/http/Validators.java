@@ -16,7 +16,9 @@ public class Validators {
     if (request.getProductName() == null && request.getPrice() == null) {
       throw new IllegalArgumentException(
           "At least a product name or price is required when updating product");
-    } else if (request.getProductName() == null
+    }
+    validateProductName(request);
+    else if (request.getProductName() == null
         && request.getPrice().compareTo(BigDecimal.ZERO) > 0) {
       throw new IllegalArgumentException("Price must be a positive value");
     } else if (request.getPrice() == null && request.getProductName().isEmpty()) {
@@ -26,5 +28,13 @@ public class Validators {
         new Name(request.getProductName()),
         new Price(request.getPrice()),
         ProductId.fromString(productId));
+  }
+
+  private void validateProductName(UpdateProductRequest request) {
+    if (request.getProductName() == null  || request.getProductName().isEmpty()) {
+     if(request.getPrice() == null){
+       throw new IllegalArgumentException("No name given for updated product");
+     }
+    }
   }
 }

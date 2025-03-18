@@ -24,13 +24,12 @@ spring:
         show_sql: true
         format_sql: true
 
-logging:
-  level:
-    org.flywaydb: DEBUG
-    org.springframework.jdbc.core.Jpa: ERROR
-    org.springframework.boot.autoconfigure: ERROR
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.SQL: DEBUG
+#logging:
+#  level:
+#    org.flywaydb: DEBUG
+##    org.springframework.jdbc.core.Jpa: ERROR
+##    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+##    org.hibernate.SQL: DEBUG
 
 #springdoc:
 #  swagger-ui:
