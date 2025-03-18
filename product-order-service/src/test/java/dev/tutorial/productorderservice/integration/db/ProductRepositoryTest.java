@@ -12,9 +12,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
 public class ProductRepositoryTest extends BaseDbIntegrationTest {
 
   @Autowired private ProductRepository productRepository;

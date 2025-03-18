@@ -66,6 +66,18 @@ but noticed some problems with repo tests, will look into them tomorrow, its lat
 Tomorrow is deadline so I need to get the app to work for required features... 
 In worst case scenario, I woudld expect app to start up and expose API, maybe it wont be fully working but lets see....
 
+### Day 4 - Final 
+Application is working, I can cover every test case from spec via Postman however I noticed automated tests can randomly
+fail sometimes so I have to fix test containers settings. 
+
+I still need to add open api and dockerize my app, otherwise app is not finished.. :/ 
+
+TODO list 
+- Tune tests containers timeout settings to reduce build time
+- Investigate and get rid of flaky tests 
+- more tests to cover some edge cases particularly around time ranges -> this hasn't been looked well enough yet
+
+In overall I would rate work as 75% at the moment... 
 
 
 

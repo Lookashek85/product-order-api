@@ -1,16 +1,24 @@
 package dev.tutorial.productorderservice;
 
+import dev.tutorial.productorderservice.utils.TimestampProvider;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(classes = ProductOrderServiceApplication.class)
+@SpringBootTest(
+    classes = {ProductOrderServiceApplication.class, BaseDbIntegrationTest.TestConfig.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Testcontainers
+@ActiveProfiles("test")
 public abstract class BaseDbIntegrationTest {
 
   @Container
@@ -35,5 +43,14 @@ public abstract class BaseDbIntegrationTest {
                 + "&connectionTimeZone=UTC");
     registry.add("spring.datasource.username", mysqlContainer::getUsername);
     registry.add("spring.datasource.password", mysqlContainer::getPassword);
+  }
+
+  @TestConfiguration
+  static class TestConfig {
+    @Bean
+    @Primary
+    public TimestampProvider timestampProvider() {
+      return new TestTimestampProvider();
+    }
   }
 }

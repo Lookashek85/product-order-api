@@ -23,9 +23,7 @@ public class Validators {
     validateProductPrice(request, priceErrors);
 
     if (productErrors.isEmpty() && priceErrors.isEmpty()) {
-      builder
-          .productName(Name.of(request.getProductName()))
-          .price(Price.of(request.getPrice()));
+      builder.productName(Name.of(request.getProductName())).price(Price.of(request.getPrice()));
     } else if (request.getProductName() == null && priceErrors.isEmpty()) {
       builder.price(Price.of(request.getPrice()));
     } else if (request.getPrice() == null && productErrors.isEmpty()) {
