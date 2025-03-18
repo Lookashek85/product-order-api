@@ -1,6 +1,15 @@
 # Product Order Api
 Spring Boot Java simple application serving as base service for products order management
 
+## Running instructions 
+
+Application can be started locally using docker-compos in root project of `product-order-service`.
+Clone or download this repository, navigate to `product-order-service` -> `docker-compose` and type in terminal 
+`% docker-compose up --build ` to build docker image then `% docker-compose up -d` to run. 
+To shut down, type `% docker-compose down`
+
+
+
 ## Developer Journal
 ### Stage 1 - Discovery and analysis  
 Technical instructions about tech stack required and final outcome were clear at the beginning, 
@@ -72,14 +81,15 @@ fail sometimes so I have to fix test containers settings.
 
 I still need to add open api and dockerize my app, otherwise app is not finished.. :/ 
 
-TODO list 
+TODO list  (Tech debt)
 - Tune tests containers timeout settings to reduce build time
 - Investigate and get rid of flaky tests 
 - more tests to cover some edge cases particularly around time ranges -> this hasn't been looked well enough yet
 
-In overall I would rate work as 75% at the moment... 
+In overall, I would rate work as 75% at the moment... 
 
-
+### update
+I managed to add swagger open API and dockerize the application :) Kinda done but not yet, lets talk... ? 
 
 
 

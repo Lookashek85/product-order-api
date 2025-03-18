@@ -34,10 +34,10 @@ spring:
 ##    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 ##    org.hibernate.SQL: DEBUG
 
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui.html
-#    enabled: true
-#  api-docs:
-#    enabled: true
-#    path: /api-docs
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    enabled: true
+    path: /api-docs
