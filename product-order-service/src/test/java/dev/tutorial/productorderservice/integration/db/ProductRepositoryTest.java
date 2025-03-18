@@ -1,20 +1,18 @@
 package dev.tutorial.productorderservice.integration.db;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import dev.tutorial.productorderservice.BaseDbIntegrationTest;
 import dev.tutorial.productorderservice.domain.core.Product;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-//@ActiveProfiles("test")
 public class ProductRepositoryTest extends BaseDbIntegrationTest {
 
   @Autowired private ProductRepository productRepository;

@@ -11,8 +11,6 @@ import dev.tutorial.productorderservice.domain.services.OrderService;
 import dev.tutorial.productorderservice.domain.services.ProductService;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -72,14 +70,6 @@ public class OrderServiceImpl implements OrderService {
                     "Product with id  %s not found  when creating order!", product.productId()));
           }
         });
-  }
-
-  private boolean isOrderWithinTimeRange(Order order, OrderTimestamp from, OrderTimestamp to) {
-    Instant orderDate = order.orderTimestamp().value().truncatedTo(ChronoUnit.DAYS);
-    Instant fromDate = from.value().truncatedTo(ChronoUnit.DAYS);
-    Instant toDate = to.value().truncatedTo(ChronoUnit.DAYS);
-
-    return !orderDate.isBefore(fromDate) && !orderDate.isAfter(toDate);
   }
 
   private void validateFromTo(OrderTimestamp from, OrderTimestamp to) {

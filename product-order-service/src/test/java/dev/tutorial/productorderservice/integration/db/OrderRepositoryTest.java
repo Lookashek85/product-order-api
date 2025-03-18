@@ -1,5 +1,10 @@
 package dev.tutorial.productorderservice.integration.db;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import dev.tutorial.productorderservice.BaseDbIntegrationTest;
 import dev.tutorial.productorderservice.TestTimestampProvider;
 import dev.tutorial.productorderservice.domain.core.Order;
@@ -13,26 +18,14 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.OrderRepository;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
 import dev.tutorial.productorderservice.utils.TimestampProvider;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.time.temporal.ChronoUnit.SECONDS;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-//@ActiveProfiles("test")
-//@SpringBootTest(
-//    classes = {ProductOrderServiceApplication.class, OrderRepositoryTest.TestConfig.class})
 public class OrderRepositoryTest extends BaseDbIntegrationTest {
 
   private final Email buyerEmail = new Email("some@email.com");

@@ -1,5 +1,7 @@
 package dev.tutorial.productorderservice.integration.http;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.tutorial.productorderservice.BaseDbIntegrationTest;
 import dev.tutorial.productorderservice.adapters.http.requests.UpdateProductRequest;
@@ -8,6 +10,8 @@ import dev.tutorial.productorderservice.domain.core.valueobjects.Name;
 import dev.tutorial.productorderservice.domain.core.valueobjects.Price;
 import dev.tutorial.productorderservice.domain.core.valueobjects.ProductId;
 import dev.tutorial.productorderservice.domain.services.repositories.ProductRepository;
+import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -16,16 +20,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-//@SpringBootTest(
-//    classes = ProductOrderServiceApplication.class,
-//    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-//@ActiveProfiles("test")
 public class ProductsRouterIntegrationTest extends BaseDbIntegrationTest {
 
   private WebTestClient webTestClient;
